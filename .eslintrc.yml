@@ -14,7 +14,7 @@ plugins:
 rules:
   indent:
     - error
-    - 4
+    - 2
   linebreak-style:
     - error
     - unix
@@ -24,3 +24,5 @@ rules:
   semi:
     - error
     - always
+  no-unused-vars:
+    - warn

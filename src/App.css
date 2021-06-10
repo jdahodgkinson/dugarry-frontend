@@ -1,38 +1,62 @@
-.App {
-  text-align: center;
+body {
+    color: #FCFAFA;
+    background-color: #1C7293;
+    margin: 10px;
+    font-size: .9em;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.progressing {
+    background-color: #57A773;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.leaving {
+    background-color: #B3001B
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.position,
+.points {
+    text-align: center;
 }
 
-.App-link {
-  color: #61dafb;
+.position {
+    border-top-left-radius: 1em;
+    border-bottom-left-radius: 1em;
+    width: 1em;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.points {
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+    width: 1em
+}
+
+.header {
+    color: #050505;
+}
+
+td {
+    padding: .5em;
+    height: 2em;
+}
+
+.title {
+    text-align: center;
+    margin: auto;
+    padding: 1em 20px 20px 20px;
+    font-weight: bold;
+}
+
+.thirdPlaceTable {
+    background-color: #FCFAFA;
+    border-radius: 1em;
+    padding: .5em;
+    width: 90%;
+}
+
+
+table {
+    font-family: 'Montserrat', sans-serif;
+    border-spacing: 0 .5em;
+    max-width: 1200px;
+    margin: auto;
 }
