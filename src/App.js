@@ -1,58 +1,42 @@
-import * as fs from 'fs';
-import PropTypes from 'prop-types';
-import React, { useState, useEffect } from 'react';
-import './App.css';
-import { thirdPlaceTable } from './testData';
+import React, { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Container from "react-bootstrap/Container";
+import Table from "react-bootstrap/Table";
+import Spinner from "react-bootstrap/Spinner";
+import "./App.css";
 
 function Team(props) {
-  const progressing = (props.progressing) ? 'progressing' : 'leaving';
+  const tableContext = props.progressing ? "table-success" : "table-danger";
+  const team = props.team;
   return (
-    <tr className={progressing}>
-      <td className='position'>{props.position}</td>
-      <td className='teamName'>{props.team.team_name.toUpperCase()}</td>
-      <td style={{textAlign: 'center'}}>{ props.team.played }</td>
-      <td style={{textAlign: 'center'}}>{ props.team.wins }</td>
-      <td style={{textAlign: 'center'}}>{ props.team.draws }</td>
-      <td style={{textAlign: 'center'}}>{ props.team.lost }</td>
-      <td style={{textAlign: 'center'}}>{ props.team.goals }</td>
-      <td className='points'>{props.team.points}</td>
+    <tr className={tableContext}>
+      <td>{props.position}</td>
+      <td>{team.team_name}</td>
+      <td>{team.played}</td>
+      <td>{team.wins}</td>
+      <td>{team.draws}</td>
+      <td>{team.lost}</td>
+      <td>{team.goals}</td>
+      <td>{team.points}</td>
     </tr>
   );
 }
 
-Team.propTypes = {
-  position: PropTypes.number,
-  progressing :PropTypes.bool,
-  team: PropTypes.shape({
-    team_name: PropTypes.string,
-    played: PropTypes.number,
-    wins: PropTypes.number,
-    draws: PropTypes.number,
-    lost: PropTypes.number,
-    goals: PropTypes.string,
-    points: PropTypes.number
-  })
-};
-
-function Table() {
+function ThirdPlaceTable() {
+  // Define hooks.
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [table, setItems] = useState([]);
 
-  // Note: the empty deps array [] means
-  // this useEffect will run once
-  // similar to componentDidMount()
+  // Attempt to call API.
   useEffect(() => {
-    fetch('https://dugarry.herokuapp.com/api/table')
-      .then(res => res.json())
+    fetch("https://dugarry.herokuapp.com/api/table")
+      .then((res) => res.json())
       .then(
         (result) => {
           setIsLoaded(true);
           setItems(result);
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         (error) => {
           setIsLoaded(true);
           setError(error);
@@ -61,50 +45,63 @@ function Table() {
   }, []);
 
   if (error) {
+    // Return error message.
     return <div>Error: {error.message}</div>;
-  }
-  else if (!isLoaded) {
-    return <div>Loading...</div>;
-  }
-  else {
+  } else if (!isLoaded) {
+    // Return loading status.
+    const spinner = (
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
+    );
+    return spinner;
+  } else {
+    // Render table.
     const rows = [];
     for (const [i, team] of table.entries()) {
-      let progressing = i < 4;
-      const newRow = (
-        <Team progressing={ progressing } position={ i + 1 } team = { team }/>
-      );
+      const newRow = <Team progressing={i < 4} position={i + 1} team={team} />;
       rows.push(newRow);
     }
     return (
-      <table className="thirdPlaceTable">
-        <tr className="header">
-          <td>#</td>
-          <td>Nation</td>
-          <td style={{textAlign: 'center'}}>Pl</td>
-          <td style={{textAlign: 'center'}}>W</td>
-          <td style={{textAlign: 'center'}}>D</td>
-          <td style={{textAlign: 'center'}}>L</td>
-          <td style={{textAlign: 'center'}}>Goals</td>
-          <td>Pts</td>
-        </tr>
-        { rows }
-      </table>
+      <Table hover>
+        <TableHeader />
+        {rows}
+      </Table>
     );
   }
 }
 
-function Title() {
+function TableHeader() {
   return (
-    <h1 className="title">Euro 2020 3rd Place Tracker</h1>
+    <thead className="thead-dark">
+      <tr>
+        <td>#</td>
+        <td>Nation</td>
+        <td>Pl</td>
+        <td>W</td>
+        <td>D</td>
+        <td>L</td>
+        <td>Goals</td>
+        <td>Pts</td>
+      </tr>
+    </thead>
   );
+}
+
+function Title() {
+  const style = {
+    "text-align": "center",
+    "padding": "20px"
+  }
+  return <h1 style={style}>Euro 2020 3rd Place Tracker</h1>;
 }
 
 function App() {
   return (
-    <div>
-      <Title></Title>
-      <Table/>
-    </div>
+    <Container>
+      <Title/>
+      <ThirdPlaceTable />
+    </Container>
   );
 }
 
